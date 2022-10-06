@@ -2,7 +2,9 @@ package com.restlearning;
 
 import com.restlearning.model.Employee;
 import com.restlearning.model.Student;
+import com.restlearning.model.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,16 +42,17 @@ public class MyController {
     }
 
     @GetMapping("/api/students")
-    public String getAllStudents(){
-        List<Student> fetchallStudents = new ArrayList<Student>();
-
+    public List<Student> getAllStudents(){
         String url = "http://localhost:8989/students";
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 
         HttpEntity<String> entity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<String> originalResponse = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
-        return originalResponse.getBody();
-
+        ResponseEntity<List<Student>> originalResponse = restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<Student>>() {});
+//        Test test = new Test();
+//        test.setStudents(originalResponse.getBody());
+        List<Student> fetchallstudents = new ArrayList<>();
+        fetchallstudents = originalResponse.getBody();
+        return fetchallstudents;
     }
 }
